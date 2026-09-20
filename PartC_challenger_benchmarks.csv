@@ -1,0 +1,4 @@
+model,features,roc_auc,pr_auc,brier_score
+Champion: 16 application-time features,16,0.8785871964679911,0.22762754450530603,0.05265635399745581
+Challenger: credit_score alone,1,0.8072111846946285,0.39573388766494216,0.05064772781985179
+Sensitivity: champion plus employment_years and interest_rate,18,0.8734363502575423,0.222475769145708,0.052622550828295665

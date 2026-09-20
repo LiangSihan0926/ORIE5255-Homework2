@@ -1,0 +1,8 @@
+check,value,note
+Exact duplicate pairs (all fields except customer_id),18.0,One record of each pair is excluded from the modeling population.
+"Median nearest-neighbour distance (standardised, 8 continuous fields)",1.1664,Typical separation between two different borrowers.
+Rows with a neighbour within 0.01,36.0,Counted before the exact duplicates are removed.
+Rows with a neighbour within 0.05,36.0,Counted before the exact duplicates are removed.
+Rows with a neighbour within 0.10,36.0,Counted before the exact duplicates are removed.
+Rows with a neighbour within 0.25,36.0,Counted before the exact duplicates are removed.
+Rows with a neighbour within 0.10 after removing exact duplicates,0.0,"Zero means the duplication is copying, not a cluster of similar borrowers."

@@ -1,0 +1,36 @@
+field,classification,used_in_corrected_model,corrected_model_role,rationale
+customer_id,IDENTIFIER,False,Eligibility/split/audit only,"Persistent identifier. Use for traceability and grouping, never as a predictor."
+application_date,KNOWN_AT_DECISION_TIME,False,Eligibility/split/audit only,"Prediction timestamp. Use for eligibility and chronological splitting, not as a numeric predictor."
+age,KNOWN_AT_DECISION_TIME; POTENTIAL_PROXY,False,Eligibility/split/audit only,Protected-age and fair-lending concern. Excluded from fitting and retained for subgroup testing.
+state,KNOWN_AT_DECISION_TIME; POTENTIAL_PROXY,False,Eligibility/split/audit only,Geography can proxy protected characteristics. Excluded pending fair-lending review.
+zip_prefix,KNOWN_AT_DECISION_TIME; POTENTIAL_PROXY,False,Excluded,High-cardinality geography and redlining/proxy concern. Excluded from fitting.
+annual_income_at_application,KNOWN_AT_DECISION_TIME,True,Predictor,Reported application income. Retained with training-only imputation and a missingness indicator.
+current_income,POST_DECISION; UNCLEAR,False,Excluded,The extraction date and as-of convention are not documented. Excluded.
+employment_years,KNOWN_AT_DECISION_TIME; UNCLEAR,False,Excluded,"Application-time in concept, but 55 values exceed age minus 14. Excluded until reconciled."
+credit_score,KNOWN_AT_DECISION_TIME,True,Predictor,Bureau score at application. Retained with training-only imputation.
+debt_to_income,KNOWN_AT_DECISION_TIME,True,Predictor,Application affordability measure. Retained.
+loan_amount,KNOWN_AT_DECISION_TIME,True,Predictor,Requested/originated amount. Retained for this benchmark.
+interest_rate,UNCLEAR,False,Excluded,May be assigned after underwriting rather than known at the stated application-time prediction point. Excluded.
+term_months,KNOWN_AT_DECISION_TIME,True,Predictor,Requested loan term. Retained.
+home_ownership,KNOWN_AT_DECISION_TIME; POTENTIAL_PROXY,True,Predictor,Application field. Retained for the benchmark but requires proxy and subgroup review.
+purpose,KNOWN_AT_DECISION_TIME,True,Predictor,Stated loan purpose. Retained.
+channel,KNOWN_AT_DECISION_TIME; POTENTIAL_PROXY,True,Predictor,Application channel. Retained provisionally and monitored for access-related proxy effects.
+num_open_accounts,KNOWN_AT_DECISION_TIME,True,Predictor,Bureau history available at application. Retained.
+delinq_2y,KNOWN_AT_DECISION_TIME,True,Predictor,Historical delinquency count. Retained.
+inq_6m,KNOWN_AT_DECISION_TIME,True,Predictor,Historical credit inquiries. Retained.
+credit_utilization,KNOWN_AT_DECISION_TIME,True,Predictor,Bureau utilization at application. Retained with training-only imputation.
+prior_defaults,KNOWN_AT_DECISION_TIME,True,Predictor,"Prior outcome history, not the future target. Retained subject to point-in-time sourcing."
+bankruptcy_flag,KNOWN_AT_DECISION_TIME,True,Predictor,Application-time public-record indicator. Retained subject to legal and policy review.
+unemployment_rate,KNOWN_AT_DECISION_TIME; MACRO,True,Predictor,Macro value at application. Retained; vintage and publication lag must be controlled in production.
+prime_rate,KNOWN_AT_DECISION_TIME; MACRO,True,Predictor,Macro rate at application. Retained; vintage must be point-in-time reproducible.
+manual_review_flag,POST_DECISION; UNCLEAR; POTENTIAL_PROXY,False,Excluded,May reflect downstream process or human discretion. Excluded.
+underwriter_score,POST_DECISION; UNCLEAR; POTENTIAL_PROXY,False,Excluded,Likely an underwriting output rather than raw application information. Excluded.
+model_version,IDENTIFIER; UNCLEAR,False,Excluded,System/process metadata strongly aligned with time. Excluded from fitting.
+months_observed,POST_DECISION; OUTCOME_DERIVED,False,Eligibility/split/audit only,Measures follow-up length. Use only to establish label maturity.
+label_available,POST_DECISION; OUTCOME_DERIVED,False,Eligibility/split/audit only,Indicates target observability. Use only for eligibility.
+days_past_due_6m_after,POST_DECISION; OUTCOME_DERIVED,False,Excluded,Occurs after application and directly reveals repayment behavior. Excluded.
+collections_contacted_9m_after,POST_DECISION; OUTCOME_DERIVED,False,Excluded,Post-application collections action. Excluded.
+charged_off_amount_12m,POST_DECISION; OUTCOME_DERIVED,False,Excluded,Direct future charge-off outcome. Excluded.
+account_status_12m,POST_DECISION; OUTCOME_DERIVED,False,Excluded,Twelve-month status nearly defines the target. Excluded.
+current_balance,POST_DECISION; UNCLEAR,False,Excluded,Balance as of an undocumented later extraction date. Excluded.
+default_12m,OUTCOME_DERIVED,False,Excluded,Prediction target. Never included in predictors.
