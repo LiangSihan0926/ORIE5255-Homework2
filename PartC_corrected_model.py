@@ -913,7 +913,7 @@ NEAR_DUPLICATE_FIELDS = [
 
 
 def near_duplicate_screen(raw):
-    """Exact duplicates are easy. This also looks for rows that are merely close."""
+    """Count exact duplicates, then check for rows that are close but not identical."""
     signature = [column for column in raw.columns if column != "customer_id"]
     exact_mask = raw.duplicated(signature, keep=False)
     frame = raw[NEAR_DUPLICATE_FIELDS].fillna(raw[NEAR_DUPLICATE_FIELDS].median())
@@ -932,7 +932,7 @@ def near_duplicate_screen(raw):
             "note": "One record of each pair is excluded from the modeling population.",
         },
         {
-            "check": "Median nearest-neighbour distance (standardised, 8 continuous fields)",
+            "check": "Median nearest-neighbor distance (standardized, 8 continuous fields)",
             "value": round(float(np.median(distances)), 4),
             "note": "Typical separation between two different borrowers.",
         },
@@ -940,14 +940,14 @@ def near_duplicate_screen(raw):
     for cutoff in [0.01, 0.05, 0.10, 0.25]:
         rows.append(
             {
-                "check": f"Rows with a neighbour within {cutoff:.2f}",
+                "check": f"Rows with a neighbor within {cutoff:.2f}",
                 "value": int((distances < cutoff).sum()),
                 "note": "Counted before the exact duplicates are removed.",
             }
         )
     rows.append(
         {
-            "check": "Rows with a neighbour within 0.10 after removing exact duplicates",
+            "check": "Rows with a neighbor within 0.10 after removing exact duplicates",
             "value": int((distances_after < 0.10).sum()),
             "note": "Zero means the duplication is copying, not a cluster of similar borrowers.",
         }
@@ -956,7 +956,7 @@ def near_duplicate_screen(raw):
 
 
 def outlier_screen(raw):
-    """Range and rule screen. Nothing is deleted on the strength of this table."""
+    """Per-variable range and rule screen. Nothing is dropped based on this table alone."""
     numeric_fields = [
         "age",
         "annual_income_at_application",
@@ -993,8 +993,8 @@ def outlier_screen(raw):
 
 
 def extended_subgroup_analysis(final_test, probability, threshold):
-    """Age is in the main subgroup table. These are the other splits a
-    fair-lending review would open with."""
+    """Subgroup results for home ownership, channel and state. Age bands are
+    reported separately in subgroup_analysis."""
     frame = final_test[["customer_id", "home_ownership", "channel", "state", TARGET]].copy()
     frame["probability_default"] = probability
     frame["prediction"] = (probability >= threshold).astype(int)
@@ -1020,8 +1020,8 @@ def extended_subgroup_analysis(final_test, probability, threshold):
 
 
 def challenger_benchmarks(development, final_test, selected, champion_probability):
-    """Two questions: does the 16-variable model beat the bureau score, and did
-    excluding employment_years and interest_rate cost anything?"""
+    """Compare the champion with a credit_score-only benchmark, and measure what
+    excluding employment_years and interest_rate cost."""
     y_final = final_test[TARGET].to_numpy(dtype=int)
     rows = [
         {
@@ -1232,10 +1232,10 @@ def _auc_of_run(x_train, y_train, x_test, y_test):
 
 
 def leakage_attribution(raw, seeds):
-    """Repair one fault at a time and watch what the score does.
+    """Repair one fault at a time and record the resulting test score.
 
-    The model family is held fixed so that the movement is attributable to the
-    repair and not to a different estimator.
+    The model family is held fixed so any movement is attributable to the
+    repair rather than to a different estimator.
     """
     rows = []
 
@@ -1303,7 +1303,7 @@ def leakage_attribution(raw, seeds):
 
     for label, drop_censored, chronological in [
         ("R3 fit preprocessing and screening on training rows only", False, False),
-        ("R4 drop the censored rows instead of relabelling them", True, False),
+        ("R4 drop the censored rows instead of relabeling them", True, False),
         ("R5 split chronologically instead of at random", True, True),
     ]:
         df = _attribution_frame(raw, drop_leaked=True, drop_censored=drop_censored)
@@ -1317,7 +1317,6 @@ def leakage_attribution(raw, seeds):
         keep = _screen(x_train, y_train)
         ladder.append((label, _auc_of_run(x_train[keep], y_train, x_test[keep], y_test)))
 
-    previous = None
     for label, (auc, rows_count, defaults) in ladder:
         rows.append(
             {
@@ -1330,7 +1329,6 @@ def leakage_attribution(raw, seeds):
                 "test_defaults": defaults,
             }
         )
-        previous = auc
     return pd.DataFrame(rows)
 
 

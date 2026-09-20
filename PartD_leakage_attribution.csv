@@ -7,5 +7,5 @@ cumulative repair ladder,R0 as submitted,1.0,,,486.0,256.0
 cumulative repair ladder,R1 drop leaked and post-decision fields,1.0,,,486.0,256.0
 cumulative repair ladder,R2 oversample after the split,0.778,,,250.0,5.0
 cumulative repair ladder,R3 fit preprocessing and screening on training rows only,0.7649,,,250.0,5.0
-cumulative repair ladder,R4 drop the censored rows instead of relabelling them,0.6755,,,202.0,4.0
+cumulative repair ladder,R4 drop the censored rows instead of relabeling them,0.6755,,,202.0,4.0
 cumulative repair ladder,R5 split chronologically instead of at random,0.6364,,,202.0,12.0
